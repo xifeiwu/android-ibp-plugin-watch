@@ -27,7 +27,7 @@
         </service>
 
         <source-file src="src/android/WatchPlugin.java" target-dir="src/ibp/plugin/watch" />
-        <source-file src="src/android/ListenerServiceForMobile" target-dir="src/ibp/plugin/watch" />
+        <source-file src="src/android/ListenerServiceForMobile.java" target-dir="src/ibp/plugin/watch" />
 <!--
         <source-file src="src/android/" target-dir="src/ibp/plugin/watch" />
         <source-file src="src/android/" target-dir="src/ibp/plugin/watch" />
