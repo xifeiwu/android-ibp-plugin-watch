@@ -20,11 +20,13 @@
                 <param name="android-package" value="ibp.plugin.watch.WatchPlugin"/>
             </feature>
         </config-file>
-        <service android:name="ibp.plugin.watch.ListenerServiceForMobile">
-            <intent-filter>
-                <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
-            </intent-filter>
-        </service>
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <service android:name="ibp.plugin.watch.ListenerServiceForMobile">
+                <intent-filter>
+                    <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
+                </intent-filter>
+            </service>
+        </config-file>
 
         <source-file src="src/android/WatchPlugin.java" target-dir="src/ibp/plugin/watch" />
         <source-file src="src/android/ListenerServiceForMobile.java" target-dir="src/ibp/plugin/watch" />

@@ -31,19 +31,19 @@ import java.util.Date;
 /**
  * Created by f on 2015/6/4.
  */
-public class ListenerServiceForMobile extends WearableListenerService implements DataApi.DataListener ,GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener
-{
+public class ListenerServiceForMobile extends WearableListenerService implements DataApi.DataListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-    //发送数据path
+    // 发送数据path
     private static final String WEAR_OPEN_PPT = "/wear/open-ppt";
     private static final String WEAR_OPEN_LIST = "/wear/open-list";
     private static final String WEAR_PPT_CONTROL = "/wear/ppt-control";
-    private static final String WEAR_DATA="/wear/date-change";
-    //接收数据path
+    private static final String WEAR_DATA = "/wear/date-change";
+    // 接收数据path
     private static final String PHONE_OPEN_PPT = "/phone/open-ppt";
     private static final String PHONE_OPEN_LIST = "/phone/open-list";
     private static final String PHONE_PPT_CONTROL = "/phone/ppt-control";
-    private static final String PHONE_PATH="/phone/date-change";
+    private static final String PHONE_PATH = "/phone/date-change";
     private Intent intent = new Intent("io.cordova.hellocordova.PPTControl");
 
     protected Node mNode;
@@ -51,20 +51,17 @@ public class ListenerServiceForMobile extends WearableListenerService implements
     private ServiceMsgReceiver msgReceiver;
     GoogleApiClient mGoogleApiClient;
 
-    //-----------------------------------------------implement-------------------------------------------------------
+    // -----------------------------------------------implement-------------------------------------------------------
     @Override
     public void onCreate() {
         super.onCreate();
-Log.v("","ListenerServiceForMobile");
-        //注册通信
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Wearable.API)
-                .build();
+        Log.v("", "ListenerServiceForMobile");
+        // 注册通信
+        mGoogleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this).addApi(Wearable.API).build();
         mGoogleApiClient.connect();
 
-        //注册broadcast监听
+        // 注册broadcast监听
         msgReceiver = new ServiceMsgReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("io.cordova.hellocordova.ForPhoneServer");
@@ -73,32 +70,31 @@ Log.v("","ListenerServiceForMobile");
 
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
-        String MessagePath =messageEvent.getPath();
-            Log.v("OnMessageR","received a message for wear");
-            Log.v("MessagePath","the Path is "+ MessagePath);
+        String MessagePath = messageEvent.getPath();
+        Log.v("OnMessageR", "received a message for wear");
+        Log.v("MessagePath", "the Path is " + MessagePath);
         /*
          * Receive the message from wear
          */
         if (MessagePath.equals(PHONE_OPEN_PPT)) {
             String s = new String(messageEvent.getData());
-//            Intent startIntent = new Intent(this, BackActivities.class);
-//            startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            startActivity(startIntent);
+            // Intent startIntent = new Intent(this, BackActivities.class);
+            // startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            // startActivity(startIntent);
 
-            //Lyn : js openPPT
-            WebViewActivity.openPPT();
-        }
-        else if (MessagePath.equals(PHONE_PPT_CONTROL))
-        {
+            // Lyn : js openPPT
+            // comment later
+            // WebViewActivity.openPPT();
+        } else if (MessagePath.equals(PHONE_PPT_CONTROL)) {
             String s = new String(messageEvent.getData());
-            Log.d("well","the message is " + s);
+            Log.d("well", "the message is " + s);
             Bundle bundle = new Bundle();
             bundle.putString("message", s);
             intent.putExtras(bundle);
             sendBroadcast(intent);
 
-            //Lyn : js playPPT
-            //WebViewActivity.openPPT();
+            // Lyn : js playPPT
+            // WebViewActivity.openPPT();
             super.onMessageReceived(messageEvent);
         }
 
@@ -108,17 +104,15 @@ Log.v("","ListenerServiceForMobile");
     public void onDataChanged(DataEventBuffer dataEvents) {
         Log.d("Function", "This is function onDataChanged");
         for (DataEvent event : dataEvents) {
-            if (event.getType() == DataEvent.TYPE_DELETED)
-            {
+            if (event.getType() == DataEvent.TYPE_DELETED) {
 
-            }else if (event.getType() == DataEvent.TYPE_CHANGED)
-            {
-                DataMap dataMap= DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
-                if(event.getDataItem().getUri().getPath().equals("only-wear")){
-                    String content=dataMap.get("content");
-                    if (content == "left"){
+            } else if (event.getType() == DataEvent.TYPE_CHANGED) {
+                DataMap dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
+                if (event.getDataItem().getUri().getPath().equals("only-wear")) {
+                    String content = dataMap.get("content");
+                    if (content == "left") {
 
-                    }else if (content == "right"){
+                    } else if (content == "right") {
 
                     }
 
@@ -132,18 +126,19 @@ Log.v("","ListenerServiceForMobile");
     @Override
     public void onConnected(Bundle bundle) {
         Wearable.DataApi.addListener(mGoogleApiClient, this);
-        Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).setResultCallback(new ResultCallback<NodeApi.GetConnectedNodesResult>() {
-            @Override
-            public void onResult(NodeApi.GetConnectedNodesResult nodes) {
-                for (Node node : nodes.getNodes()) {
-                    mNode = node;
-                    NodeID =mNode.getId();
-                    Log.d("NodeId", "The node id is " + NodeID);
-                    //获得node ID后发送消息启动activity
+        Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).setResultCallback(
+                new ResultCallback<NodeApi.GetConnectedNodesResult>() {
+                    @Override
+                    public void onResult(NodeApi.GetConnectedNodesResult nodes) {
+                        for (Node node : nodes.getNodes()) {
+                            mNode = node;
+                            NodeID = mNode.getId();
+                            Log.d("NodeId", "The node id is " + NodeID);
+                            // 获得node ID后发送消息启动activity
 
-                }
-            }
-        });
+                        }
+                    }
+                });
     }
 
     @Override
@@ -162,12 +157,11 @@ Log.v("","ListenerServiceForMobile");
         super.onDestroy();
     }
 
-    //-----------------------------------------------implement-------------------------------------------------------
+    // -----------------------------------------------implement-------------------------------------------------------
 
-    //-----------------------------------------------custom-------------------------------------------------------
-    public void SendMessageToWear(String content,String path)
-    {
-        Log.e("message","You're sending a message at service: "+ content);
+    // -----------------------------------------------custom-------------------------------------------------------
+    public void SendMessageToWear(String content, String path) {
+        Log.e("message", "You're sending a message at service: " + content);
         byte[] abc = new byte[0];
         try {
             abc = content.getBytes("UTF-8");
@@ -176,8 +170,8 @@ Log.v("","ListenerServiceForMobile");
         }
 
         if (NodeID != null) {
-            Wearable.MessageApi.sendMessage(mGoogleApiClient, mNode.getId(), path, abc)
-                    .setResultCallback(new ResultCallback<MessageApi.SendMessageResult>() {
+            Wearable.MessageApi.sendMessage(mGoogleApiClient, mNode.getId(), path, abc).setResultCallback(
+                    new ResultCallback<MessageApi.SendMessageResult>() {
                         @Override
                         public void onResult(MessageApi.SendMessageResult sendMessageResult) {
 
@@ -192,69 +186,69 @@ Log.v("","ListenerServiceForMobile");
         }
     }
 
-    public void SendDataToWear(Bundle bundle, String path, String key, int type)
-    {//type: 0 for StringArrayList; 1 for IntegerArrayList
-        Log.d("DATA","path is "+path +"key is "+ key);
+    public void SendDataToWear(Bundle bundle, String path, String key, int type) {// type:
+                                                                                  // 0
+                                                                                  // for
+                                                                                  // StringArrayList;
+                                                                                  // 1
+                                                                                  // for
+                                                                                  // IntegerArrayList
+        Log.d("DATA", "path is " + path + "key is " + key);
         PutDataMapRequest dataMap = PutDataMapRequest.create(path);
 
-        switch (type)
-        {
-            case 0:
-                ArrayList<String> ValueString = bundle.getStringArrayList(key);
-                dataMap.getDataMap().putStringArrayList(key,ValueString);
-                Log.d("case","case 0");
-            case 1:
-                ArrayList<Integer> ValueInt = bundle.getIntegerArrayList(key);
-                dataMap.getDataMap().putIntegerArrayList(key, ValueInt);
-                Log.d("case ","case 1");
+        switch (type) {
+        case 0:
+            ArrayList<String> ValueString = bundle.getStringArrayList(key);
+            dataMap.getDataMap().putStringArrayList(key, ValueString);
+            Log.d("case", "case 0");
+        case 1:
+            ArrayList<Integer> ValueInt = bundle.getIntegerArrayList(key);
+            dataMap.getDataMap().putIntegerArrayList(key, ValueInt);
+            Log.d("case ", "case 1");
         }
-        //加入时间，确保数据变化
+        // 加入时间，确保数据变化
         dataMap.getDataMap().putLong("TimeKey", new Date().getTime());
 
         PutDataRequest request = dataMap.asPutDataRequest();
-        Wearable.DataApi.putDataItem(mGoogleApiClient, request)
-                .setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
+        Wearable.DataApi.putDataItem(mGoogleApiClient, request).setResultCallback(
+                new ResultCallback<DataApi.DataItemResult>() {
                     @Override
                     public void onResult(DataApi.DataItemResult dataItemResult) {
-                        if (dataItemResult.getStatus().isSuccess())
-                        {
-                            Log.d("DataSend","Data sending success");
-                        }else{
-                            Log.d("DataSend","Data sending Failed");
+                        if (dataItemResult.getStatus().isSuccess()) {
+                            Log.d("DataSend", "Data sending success");
+                        } else {
+                            Log.d("DataSend", "Data sending Failed");
                         }
                     }
                 });
 
     }
 
-    //-----------------------------------------------custom-------------------------------------------------------
+    // -----------------------------------------------custom-------------------------------------------------------
 
     public class ServiceMsgReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i("Broadcast","get a message");
+            Log.i("Broadcast", "get a message");
             Bundle bundle = intent.getExtras();
-            if ( bundle.containsKey("PPT"))
-            {
+            if (bundle.containsKey("PPT")) {
                 String message = bundle.getString("PPT");
                 Log.e("BroadCastMessage", "Service received message: " + message);
-                //send message to wear
-                SendMessageToWear(message,WEAR_PPT_CONTROL);
+                // send message to wear
+                SendMessageToWear(message, WEAR_PPT_CONTROL);
 
-            }
-            else if (bundle.containsKey("PPTList"))
-            {
-                //ArrayList<String> FileList = bundle.getStringArrayList("PPTList");
-                SendDataToWear(bundle,WEAR_DATA,"PPTPages",1);
-                SendDataToWear(bundle,WEAR_OPEN_LIST,"PPTList",0);
-            }
-            else if ( bundle.containsKey("OpenPPT"))
-            {
+            } else if (bundle.containsKey("PPTList")) {
+                // ArrayList<String> FileList =
+                // bundle.getStringArrayList("PPTList");
+                SendDataToWear(bundle, WEAR_DATA, "PPTPages", 1);
+                SendDataToWear(bundle, WEAR_OPEN_LIST, "PPTList", 0);
+            } else if (bundle.containsKey("OpenPPT")) {
                 int aaa = bundle.getInt("OpenPPT");
                 Log.e("BroadCastMessage", "Service received message: " + aaa);
-                    SendMessageToWear("0",WEAR_OPEN_PPT);
+                SendMessageToWear("0", WEAR_OPEN_PPT);
             }
 
         }
     }
 }
+

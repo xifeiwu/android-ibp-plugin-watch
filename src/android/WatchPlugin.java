@@ -11,7 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-public class WatchPlugin extends CordovaPlugin{
+public class WatchPlugin extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         switch (action) {
         case "start":
@@ -32,48 +32,42 @@ public class WatchPlugin extends CordovaPlugin{
 
     private void prevPage(CallbackContext callbackContext) {
         // TODO Auto-generated method stub
-        
+
     }
 
     private void nextPage(CallbackContext callbackContext) {
         // TODO Auto-generated method stub
-        
+
     }
 
     private void stop(CallbackContext callbackContext) {
         // TODO Auto-generated method stub
-        
+
     }
 
     private void start(CallbackContext callbackContext) {
         // TODO Auto-generated method stub
-        
+
     }
+
     class MsgReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            //String message = intent.getStringExtra("message");
+            // String message = intent.getStringExtra("message");
             Bundle bundle = intent.getExtras();
             Log.v("myTag", "Main activity received message");
             // Display message in UI
-            if(bundle.containsKey("message"))
-            {
+            if (bundle.containsKey("message")) {
                 String s = bundle.getString("message");
-                if(s.equals("0"))
-                {
-                    Log.e("Tag","The message is "+s);
-//                    WebViewActivity.backPPT();
-                }
-                else if(s.equals("1"))
-                {
-//                    WebViewActivity.nextPPT();
-                }
-                else if(s.equals("2"))
-                {
-//                    WebViewActivity.stopPPT();
+                if (s.equals("0")) {
+                    Log.e("Tag", "The message is " + s);
+                    // WebViewActivity.backPPT();
+                } else if (s.equals("1")) {
+                    // WebViewActivity.nextPPT();
+                } else if (s.equals("2")) {
+                    // WebViewActivity.stopPPT();
                 }
             }
-            
 
         }
     }
