@@ -24,7 +24,7 @@
             <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-            <service android:name="ibp.plugin.watch.ListenerServiceForMobile">
+            <service android:name="ibp.plugin.watch.Service4Watch">
                 <intent-filter>
                     <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
                 </intent-filter>
@@ -32,7 +32,7 @@
         </config-file>
 
         <source-file src="src/android/WatchPlugin.java" target-dir="src/ibp/plugin/watch" />
-        <source-file src="src/android/ListenerServiceForMobile.java" target-dir="src/ibp/plugin/watch" />
+        <source-file src="src/android/Service4Watch.java" target-dir="src/ibp/plugin/watch" />
 <!--
         <source-file src="src/android/" target-dir="src/ibp/plugin/watch" />
         <source-file src="src/android/" target-dir="src/ibp/plugin/watch" />
